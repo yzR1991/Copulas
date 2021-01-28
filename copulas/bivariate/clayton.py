@@ -10,7 +10,8 @@ class Clayton(Bivariate):
     copula_type = CopulaTypes.CLAYTON
     theta_interval = [0, float('inf')]
     invalid_thetas = []
-
+    
+    #定义，此时archimedean对应的函数
     def generator(self, t):
         r"""Compute the generator function for Clayton copula family.
 
@@ -29,7 +30,8 @@ class Clayton(Bivariate):
         self.check_fit()
 
         return (1.0 / self.theta) * (np.power(t, -self.theta) - 1)
-
+    
+    #将二维X按行拆分后，计算bivariate每一点的概率密度
     def probability_density(self, X):
         r"""Compute probability density function for given copula family.
 
@@ -55,6 +57,7 @@ class Clayton(Bivariate):
         c = -(2 * self.theta + 1) / self.theta
         return a * np.power(b, c)
 
+    #将二维X按行拆分后，计算bivariate每一点的累积密度
     def cumulative_distribution(self, X):
         """Compute the cumulative distribution function for the clayton copula.
 
@@ -142,7 +145,8 @@ class Clayton(Bivariate):
         B = np.power(V, -self.theta) + np.power(U, -self.theta) - 1
         h = np.power(B, (-1 - self.theta) / self.theta)
         return np.multiply(A, h)
-
+    
+    #不同类型copula的参数可以由kendall或者其他方法估计
     def compute_theta(self):
         r"""Compute theta parameter using Kendall's tau.
 
