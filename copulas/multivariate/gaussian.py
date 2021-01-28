@@ -85,7 +85,8 @@ class GaussianMultivariate(Multivariate):
 
     @check_valid_values
     #对输入X每一列的边缘分布进行分析，在备选集中选取最近似的
-    #具体执行由select_univariate执行ks检验选取最近似的
+    #具体地，在select_univariate中，选取一个candidate后，用该candidate fit样本数据
+    #接着执行由执行ks检验，选取拟合后最接近样本的candidate
     def fit(self, X):
         """Compute the distribution for each variable and then its covariance matrix.
 
