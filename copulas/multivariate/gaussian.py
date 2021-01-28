@@ -33,7 +33,8 @@ class GaussianMultivariate(Multivariate):
     def __init__(self, distribution=DEFAULT_DISTRIBUTION, random_seed=None):
         self.random_seed = random_seed
         self.distribution = distribution
-
+    
+    #该分布类型
     def __repr__(self):
         if self.distribution == DEFAULT_DISTRIBUTION:
             distribution = ''
@@ -43,7 +44,8 @@ class GaussianMultivariate(Multivariate):
             distribution = 'distribution="{}"'.format(self.distribution)
 
         return 'GaussianMultivariate({})'.format(distribution)
-
+    
+    #将输入X转换为dataframe后，将范围内的百分数取正态分布CDF的逆
     def _transform_to_normal(self, X):
         if isinstance(X, pd.Series):
             X = X.to_frame().T
@@ -60,6 +62,7 @@ class GaussianMultivariate(Multivariate):
 
         return stats.norm.ppf(np.column_stack(U))
 
+    #计算转换后的协方差矩阵
     def _get_covariance(self, X):
         """Compute covariance matrix with transformed data.
 
@@ -81,6 +84,8 @@ class GaussianMultivariate(Multivariate):
         return covariance
 
     @check_valid_values
+    #对输入X每一列的边缘分布进行分析，在备选集中选取最近似的
+    #具体执行由select_univariate执行ks检验选取最近似的
     def fit(self, X):
         """Compute the distribution for each variable and then its covariance matrix.
 
@@ -118,6 +123,7 @@ class GaussianMultivariate(Multivariate):
 
         LOGGER.debug('GaussianMultivariate fitted successfully')
 
+    #用输入X造一个多元高斯概率密度函数
     def probability_density(self, X):
         """Compute the probability density for each point in X.
 
@@ -136,7 +142,8 @@ class GaussianMultivariate(Multivariate):
         self.check_fit()
         transformed = self._transform_to_normal(X)
         return stats.multivariate_normal.pdf(transformed, cov=self.covariance)
-
+    
+    #用输入X造一个多元高斯累积分布函数
     def cumulative_distribution(self, X):
         """Compute the cumulative distribution value for each point in X.
 
@@ -157,6 +164,7 @@ class GaussianMultivariate(Multivariate):
         return stats.multivariate_normal.cdf(transformed, cov=self.covariance)
 
     @random_state
+    #按照给定的X生成随机样本
     def sample(self, num_rows=1):
         """Sample values from this model.
 
@@ -181,13 +189,15 @@ class GaussianMultivariate(Multivariate):
 
         clean_cov = np.nan_to_num(self.covariance)
         samples = np.random.multivariate_normal(means, clean_cov, size=size)
-
+        
+        #对每一列，先用高斯分布生成随机数，再反过来用CDF生成百分数，然后生成对应分布的随机数
         for i, (column_name, univariate) in enumerate(zip(self.columns, self.univariates)):
             cdf = stats.norm.cdf(samples[:, i])
             res[column_name] = univariate.percent_point(cdf)
 
         return pd.DataFrame(data=res)
-
+    
+    #输出该分布匹配的分布类型、对应的参数等等
     def to_dict(self):
         """Return a `dict` with the parameters to replicate this object.
 
