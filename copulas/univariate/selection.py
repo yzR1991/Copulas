@@ -23,7 +23,7 @@ def select_univariate(X, candidates):
         try:
             instance = get_instance(model)
             instance.fit(X)
-            ks, _ = kstest(X, instance.cdf)
+            ks, _ = kstest(X, instance.cdf) #第一项返回值代表俩样本分布距离，第二项是p值
             if ks < best_ks:
                 best_ks = ks
                 best_model = model
