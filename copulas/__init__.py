@@ -41,7 +41,7 @@ def random_state(function):
 
     return wrapper
 
-
+#获取与obj同类型的样本
 def get_instance(obj, **kwargs):
     """Create new instance of the ``obj`` argument.
 
