@@ -45,7 +45,7 @@ class GaussianMultivariate(Multivariate):
 
         return 'GaussianMultivariate({})'.format(distribution)
     
-    #将输入X转换为dataframe后，将范围内的百分数取正态分布CDF的逆：即，把当前分布的百分位a的数，转化为正态分布百分位a的概率密度
+    #将输入X转换为dataframe后，将范围内的百分数取正态分布CDF的逆：即，把当前分布的百分位a的数，转化为正态分布百分位a的数
     #EPSILON是非常小的正常数，约为10**-16
     def _transform_to_normal(self, X):
         if isinstance(X, pd.Series):
