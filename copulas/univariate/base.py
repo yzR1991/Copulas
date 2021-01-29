@@ -48,6 +48,8 @@ class Univariate(object):
     _instance = None
 
     @classmethod
+    #获取该函数所有子类（即该目录下gauss，gama等）
+    #选取符合给定参数的子类作为下一步筛选的对象
     def _select_candidates(cls, parametric=None, bounded=None):
         """Select which subclasses fulfill the specified constriants.
 
