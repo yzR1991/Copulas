@@ -124,7 +124,7 @@ class GaussianMultivariate(Multivariate):
 
         LOGGER.debug('GaussianMultivariate fitted successfully')
 
-    #用输入X造一个多元高斯概率密度函数
+    #用输入X造一个多元高斯概率密度函数后，返回X每一点的概率密度
     def probability_density(self, X):
         """Compute the probability density for each point in X.
 
@@ -144,7 +144,7 @@ class GaussianMultivariate(Multivariate):
         transformed = self._transform_to_normal(X)
         return stats.multivariate_normal.pdf(transformed, cov=self.covariance)
     
-    #用输入X造一个多元高斯累积分布函数
+    #用输入X造一个多元高斯累积分布函数后，返回每一点的累积概率
     def cumulative_distribution(self, X):
         """Compute the cumulative distribution value for each point in X.
 
