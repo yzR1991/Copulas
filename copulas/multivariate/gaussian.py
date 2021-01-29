@@ -192,8 +192,7 @@ class GaussianMultivariate(Multivariate):
         samples = np.random.multivariate_normal(means, clean_cov, size=size)
         
         #对每一列，先用高斯分布生成随机数samples，再反过来用CDF生成百分数，然后生成对应分布的随机数
-        #本质上是用边缘分布的百分数组合成一个样本，并不是真实的样本
-        #如果要取百分数的话，cdf=np.linspace(0,1,20,endpoint=False)就行
+        #本质上是用拟合的高斯分布+边缘分布的百分数组合成一个样本，并不是真实的样本
         for i, (column_name, univariate) in enumerate(zip(self.columns, self.univariates)):
             cdf = stats.norm.cdf(samples[:, i])
             res[column_name] = univariate.percent_point(cdf)
